@@ -1,31 +1,55 @@
 # user_api.py
 
 class UserAPI:
+    def __init__(self):
+        # In-memory storage for users and a counter for unique user IDs.
+        self.users = {}
+        self.next_user_id = 1
+
     def create_user(self, username, **attributes):
-        print(f"Creating user '{username}' with attributes: {attributes}")
-        # Stub: Add logic to create a user
-        return {"username": username, "attributes": attributes}
+        user_id = self.next_user_id
+        self.next_user_id += 1
+        user = {
+            "user_id": user_id,
+            "username": username,
+            "attributes": attributes
+        }
+        self.users[user_id] = user
+        print(f"Created user: {user}")
+        return user
     
     def delete_user(self, user_id):
-        print(f"Deleting user with ID: {user_id}")
-        # Stub: Add logic to delete a user
+        if user_id not in self.users:
+            raise ValueError(f"User with ID {user_id} not found.")
+        del self.users[user_id]
+        print(f"Deleted user with ID: {user_id}")
         return True
     
     def read_user(self, user_id):
-        print(f"Reading user with ID: {user_id}")
-        # Stub: Add logic to read user details
-        return {"user_id": user_id, "username": "example", "attributes": {}}
+        user = self.users.get(user_id)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found.")
+        print(f"Reading user: {user}")
+        return user
     
     def update_user(self, user_id, **attributes):
-        print(f"Updating user with ID: {user_id} with attributes: {attributes}")
-        # Stub: Add logic to update a user
-        return {"user_id": user_id, "updated_attributes": attributes}
+        user = self.users.get(user_id)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found.")
+        # Update attributes by merging existing with new values
+        user["attributes"].update(attributes)
+        print(f"Updated user: {user}")
+        return {"user_id": user_id, "updated_attributes": user["attributes"]}
 
 
 # Example usage:
 if __name__ == "__main__":
     api = UserAPI()
+    # Create a new user; user_id is auto-generated.
     user = api.create_user("john_doe", email="john@example.com")
-    api.read_user(1)
-    api.update_user(1, email="john_new@example.com")
-    api.delete_user(1)
+    # Read user details.
+    print(api.read_user(user["user_id"]))
+    # Update user attributes.
+    print(api.update_user(user["user_id"], email="john_new@example.com"))
+    # Delete the user.
+    api.delete_user(user["user_id"])
