@@ -24,16 +24,15 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt  # Ensure all dependencies are installed
-
+          pip install fastapi uvicorn pytest httpx 
       - name: Start FastAPI Server
         env:
-          PYTHONPATH: ${{ github.workspace }}  # ✅ Ensures Python finds `api/`
+          PYTHONPATH: ${{ github.workspace }}  
         run: |
           python server.py &  # Run FastAPI server in the background
           sleep 5  # Wait for the server to start
 
       - name: Run tests
         env:
-          PYTHONPATH: ${{ github.workspace }}  # ✅ Ensures tests can import modules
+          PYTHONPATH: ${{ github.workspace }} 
         run: pytest tests/
