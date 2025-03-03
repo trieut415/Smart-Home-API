@@ -9,7 +9,7 @@ app = FastAPI(title="Smart Home API", description="API for managing smart home d
 # Register routers
 app.include_router(device_router, prefix="/devices", tags=["Devices"])
 app.include_router(house_router, prefix="/houses", tags=["Houses"])
-app.include_router(room_router, prefix="/rooms", tags=["Rooms"])
+app.include_router(room_router, prefix="/houses", tags=["Rooms"])
 app.include_router(user_router, prefix="/users", tags=["Users"])
 
 # Root route
@@ -19,4 +19,5 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)
+

@@ -68,12 +68,21 @@ def add_floor(house_id: str, floor: FloorCreate):
     house = houses.get(house_id)
     if not house:
         raise HTTPException(status_code=404, detail="House not found")
-    
-    if floor.floor_number in house["floors"]:
+
+    floor_number = int(floor.floor_number)  # Ensure floor_number is an integer
+
+    if floor_number in house["floors"]:
         raise HTTPException(status_code=400, detail="Floor already exists")
-    
-    house["floors"][floor.floor_number] = {"floor_number": floor.floor_number, "metadata": floor.metadata, "rooms": {}}
+
+    house["floors"][floor_number] = {
+        "floor_number": floor_number,
+        "metadata": floor.metadata,
+        "rooms": {}
+    }
     return house
+
+
+
 
 @router.delete("/{house_id}/floors/{floor_number}")
 def delete_floor(house_id: str, floor_number: int):
